@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cerone-langchain"
+version = "0.1.0"
+description = "Cerone governance adapter for LangChain with a reusable Python client layer."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+  { name = "Homer Semantics" }
+]
+dependencies = [
+  "httpx>=0.28,<0.29",
+  "langchain-core>=1.0,<2.0",
+  "pydantic>=2.7,<3.0",
+]
+keywords = [
+  "cerone",
+  "langchain",
+  "agent-governance",
+  "aztp",
+  "middleware",
+  "tools",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0,<10.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
