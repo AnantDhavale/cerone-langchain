@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "langchain-agent-governance"
 version = "0.1.0"
-description = "Cerone governance adapter for LangChain with a reusable Python client layer."
+description = "Agent runtime governance for LangChain, powered by Cerone."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
@@ -21,7 +21,7 @@ keywords = [
   "cerone",
   "langchain",
   "agent-governance",
-  "aztp",
+  "runtime-governance",
   "middleware",
   "tools",
 ]

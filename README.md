@@ -1,10 +1,10 @@
-# langchain-runtime-governance
+# langchain-agent-governance
 
-LangChain runtime governance powered by Cerone.
+Agent runtime governance for LangChain, powered by Cerone.
 
-Cerone is a runtime governance layer for AI agents. You declare what an agent is
-supposed to do, what capabilities it should have, and then Cerone validates each
-tool call before execution.
+Cerone helps developers control what AI agents are allowed to do at runtime.
+You declare an agent's purpose and capabilities, and Cerone validates tool calls
+before they execute.
 
 For LangChain users, that means Cerone can sit in front of your tools and answer:
 
@@ -14,7 +14,7 @@ For LangChain users, that means Cerone can sit in front of your tools and answer
 
 This package contains two real layers:
 
-- `cerone`: a reusable Python client for Cerone/AZTP
+- `cerone`: a reusable Python client for Cerone
 - `cerone_langchain`: a LangChain adapter that governs tool-executing agents and workflows before execution
 
 ## Why use it with LangChain?
@@ -23,7 +23,7 @@ LangChain makes it easy to give LLM-powered agents access to tools. The missing
 piece for many teams is runtime control over what those tool calls are actually
 allowed to do.
 
-`cerone-langchain` is for cases like:
+`langchain-agent-governance` is for cases like:
 
 - coding agents that can read or modify files
 - research agents that can call external APIs
@@ -40,7 +40,7 @@ path and get explicit runtime decisions:
 
 ## How it fits
 
-At runtime, `cerone-langchain` does four things:
+At runtime, `langchain-agent-governance` does four things:
 
 1. Creates or reuses a Cerone agent identity
 2. Sends the tool name and parameters to Cerone before the tool runs
@@ -63,7 +63,7 @@ The package supports more than one-off tool wrapping:
 ## Install
 
 ```bash
-pip install langchain-runtime-governance
+pip install langchain-agent-governance
 ```
 
 Python imports stay:
@@ -93,7 +93,7 @@ For each governed tool call, the adapter:
 
 ## Data Handling
 
-`cerone-langchain` sends tool invocation data to the Cerone API at runtime for
+`langchain-agent-governance` sends tool invocation data to the Cerone API at runtime for
 validation.
 
 Depending on how your LangChain tools are defined, that runtime data may include:
@@ -162,7 +162,7 @@ In that example:
 ## Workflow and child-agent support
 
 For multi-step workflows, you can spawn a child governor from a parent governor.
-This aligns with Cerone's certificate lineage and delegated-token model.
+This aligns with Cerone's child-agent and delegated-token model.
 
 ```python
 child_governor = governor.spawn_child_governor(
