@@ -26,6 +26,12 @@ keywords = [
   "tools",
 ]
 
+[project.urls]
+Homepage = "https://github.com/AnantDhavale/cerone-langchain"
+Repository = "https://github.com/AnantDhavale/cerone-langchain"
+Issues = "https://github.com/AnantDhavale/cerone-langchain/issues"
+Privacy = "https://github.com/AnantDhavale/cerone-langchain/blob/main/PRIVACY.md"
+
 [project.optional-dependencies]
 dev = [
   "pytest>=8.0,<10.0",

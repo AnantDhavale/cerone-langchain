@@ -43,6 +43,8 @@ Do not use Cerone with sensitive or regulated data unless your organization has
 approved that data flow. Avoid placing secrets or unnecessary sensitive content
 directly in tool arguments where possible.
 
+See [PRIVACY.md](./PRIVACY.md) for the free-trial data handling policy.
+
 ## Example
 
 ```python
