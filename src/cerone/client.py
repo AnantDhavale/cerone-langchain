@@ -12,6 +12,8 @@ from .models import (
     ActionPayload,
     AgentRegistration,
     CertificateResponse,
+    ChildAgentRegistration,
+    DelegatedTokenResponse,
     TrialSessionResponse,
     ValidationRequest,
     ValidationResponse,
@@ -144,11 +146,32 @@ class CeroneClient:
         self._raise_for_status(response)
         return CertificateResponse.model_validate(response.json())
 
+    def spawn_agent(self, registration: ChildAgentRegistration) -> CertificateResponse:
+        self.ensure_api_key()
+        response = self._sync_client.post(
+            "/v1/certificates/spawn",
+            json=registration.model_dump(mode="json"),
+        )
+        self._raise_for_status(response)
+        return CertificateResponse.model_validate(response.json())
+
+    async def spawn_agent_async(
+        self, registration: ChildAgentRegistration
+    ) -> CertificateResponse:
+        await self.ensure_api_key_async()
+        response = await self._async_client.post(
+            "/v1/certificates/spawn",
+            json=registration.model_dump(mode="json"),
+        )
+        self._raise_for_status(response)
+        return CertificateResponse.model_validate(response.json())
+
     def validate(
         self,
         *,
         agent_id: str,
         action: ActionPayload,
+        access_token: str | None = None,
         blocking: bool = True,
         timeout_ms: int = 1000,
     ) -> ValidationResponse:
@@ -156,6 +179,7 @@ class CeroneClient:
         request = ValidationRequest(
             agent_id=agent_id,
             action=action,
+            access_token=access_token,
             blocking=blocking,
             timeout_ms=timeout_ms,
         )
@@ -168,6 +192,7 @@ class CeroneClient:
         *,
         agent_id: str,
         action: ActionPayload,
+        access_token: str | None = None,
         blocking: bool = True,
         timeout_ms: int = 1000,
     ) -> ValidationResponse:
@@ -175,6 +200,7 @@ class CeroneClient:
         request = ValidationRequest(
             agent_id=agent_id,
             action=action,
+            access_token=access_token,
             blocking=blocking,
             timeout_ms=timeout_ms,
         )
@@ -184,6 +210,58 @@ class CeroneClient:
         )
         self._raise_for_status(response)
         return ValidationResponse.model_validate(response.json())
+
+    def delegate_token(
+        self,
+        *,
+        scope: str,
+        audience: str = "aztp-api",
+        ttl_minutes: int = 10,
+        agent_id: str | None = None,
+        parent_agent_id: str | None = None,
+        extra_claims: dict[str, Any] | None = None,
+    ) -> DelegatedTokenResponse:
+        self.ensure_api_key()
+        payload: dict[str, Any] = {
+            "scope": scope,
+            "audience": audience,
+            "ttl_minutes": ttl_minutes,
+        }
+        if agent_id:
+            payload["agent_id"] = agent_id
+        if parent_agent_id:
+            payload["parent_agent_id"] = parent_agent_id
+        if extra_claims:
+            payload["extra_claims"] = extra_claims
+        response = self._sync_client.post("/v1/token/delegate", json=payload)
+        self._raise_for_status(response)
+        return DelegatedTokenResponse.model_validate(response.json())
+
+    async def delegate_token_async(
+        self,
+        *,
+        scope: str,
+        audience: str = "aztp-api",
+        ttl_minutes: int = 10,
+        agent_id: str | None = None,
+        parent_agent_id: str | None = None,
+        extra_claims: dict[str, Any] | None = None,
+    ) -> DelegatedTokenResponse:
+        await self.ensure_api_key_async()
+        payload: dict[str, Any] = {
+            "scope": scope,
+            "audience": audience,
+            "ttl_minutes": ttl_minutes,
+        }
+        if agent_id:
+            payload["agent_id"] = agent_id
+        if parent_agent_id:
+            payload["parent_agent_id"] = parent_agent_id
+        if extra_claims:
+            payload["extra_claims"] = extra_claims
+        response = await self._async_client.post("/v1/token/delegate", json=payload)
+        self._raise_for_status(response)
+        return DelegatedTokenResponse.model_validate(response.json())
 
     @staticmethod
     def _raise_for_status(response: httpx.Response) -> None:

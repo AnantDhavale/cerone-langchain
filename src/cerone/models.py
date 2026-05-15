@@ -11,7 +11,12 @@ ValidationResult = Literal["approved", "flagged", "rejected"]
 
 class ActionContext(BaseModel):
     source: str = "langchain"
+    agent_name: str | None = None
     run_id: str | None = None
+    session_id: str | None = None
+    workflow_id: str | None = None
+    workflow_step: str | None = None
+    parent_agent_id: str | None = None
     tags: list[str] = Field(default_factory=list)
     metadata: dict[str, Any] = Field(default_factory=dict)
 
@@ -25,6 +30,7 @@ class ActionPayload(BaseModel):
 class ValidationRequest(BaseModel):
     agent_id: str
     action: ActionPayload
+    access_token: str | None = None
     blocking: bool = True
     timeout_ms: int = 1000
 
@@ -87,3 +93,18 @@ class AgentRegistration(BaseModel):
     purpose: str
     capabilities: list[str]
     environment: Environment = "development"
+
+
+class ChildAgentRegistration(BaseModel):
+    parent_id: str
+    purpose: str
+    capabilities: list[str]
+    max_lifespan_hours: int = 24
+    environment: Environment = "development"
+
+
+class DelegatedTokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "Bearer"
+    expires_in: int
+    scope: str

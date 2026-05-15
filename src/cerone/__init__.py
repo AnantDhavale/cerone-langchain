@@ -11,6 +11,8 @@ from .models import (
     ActionPayload,
     AgentRegistration,
     CertificateResponse,
+    ChildAgentRegistration,
+    DelegatedTokenResponse,
     TrialSessionResponse,
     ValidationResponse,
 )
@@ -26,6 +28,8 @@ __all__ = [
     "CeroneError",
     "CeroneHTTPError",
     "CertificateResponse",
+    "ChildAgentRegistration",
+    "DelegatedTokenResponse",
     "TrialSessionResponse",
     "ValidationResponse",
 ]

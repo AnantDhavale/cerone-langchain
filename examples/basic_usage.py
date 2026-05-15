@@ -1,7 +1,7 @@
 from langchain_core.tools import tool
 
 from cerone import CeroneClient
-from cerone_langchain import ToolGovernor, govern_tool
+from cerone_langchain import govern_agent_tools
 
 
 @tool
@@ -13,14 +13,17 @@ def read_file(path: str) -> str:
 
 client = CeroneClient()
 
-governor = ToolGovernor(
+governed_tools, governor = govern_agent_tools(
+    tools=[read_file],
     client=client,
-    purpose="Perform file_read operations to inspect repository files and answer software engineering questions.",
+    preset="coding_agent",
     capabilities=["file_read"],
     environment="development",
+    agent_name="repo-inspector",
+    workflow_id="wf_repo_review",
+    workflow_step="inspect_repository",
+    default_tags=["code-review"],
 )
 
-governed_tool = govern_tool(read_file, governor)
-
 if __name__ == "__main__":
-    print(governed_tool.invoke({"path": "README.md"}))
+    print(governed_tools[0].invoke({"path": "README.md"}))
